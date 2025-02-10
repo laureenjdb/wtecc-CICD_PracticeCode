@@ -1,0 +1,14 @@
+name: CI workflow
+
+on:
+  push:
+    branches: [main] # Run the workflow on every push to the main branch.
+  pull_request:
+    branches: [main] # Run the workflow whenever a pull request is created to the main branch.
+
+# jobs = defines the tasks that will be executed (runs on the ubuntu-latest runner)
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Tell GitHub Actions to use the ubuntu-latest runner for this job.
+    container: python:3.9-slim # Add a container: tell GitHub Actions to use python:3.9-slim as the image.
