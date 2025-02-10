@@ -1,4 +1,8 @@
+# Building the Continuous Integration pipeline 
+
 name: CI workflow
+
+# This pipeline will run automatically when you commit your code to the GitHub repository based on the events described in the workflow below.
 
 on:
   push:
@@ -6,9 +10,27 @@ on:
   pull_request:
     branches: [main] # Run the workflow whenever a pull request is created to the main branch.
 
-# jobs = defines the tasks that will be executed (runs on the ubuntu-latest runner)
+# Jobs = defines the tasks that will be executed (runs on the ubuntu-latest runner)
+    # 1. update the package manager pip
+    # 2. install the dependencies from the requirements.txt file
 
 jobs:
   build:
     runs-on: ubuntu-latest # Tell GitHub Actions to use the ubuntu-latest runner for this job.
     container: python:3.9-slim # Add a container: tell GitHub Actions to use python:3.9-slim as the image.
+    steps: 
+        - name: Checkout
+          uses: actions/checkout@v3 # Checkout the repository to the runner.
+
+        - name: Install dependencies
+          run: | 
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt 
+
+        - name: Lint with flake8 # add quality checks to your CI pipeline
+          run: | 
+          flake8 service --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 service --count --max-complexity=10 --max-line-length=127 --statistics
+
+        - name: Run unit tests with nose
+          run: nosetests -v --with-spec --spec-color --with-coverage --cover-package=app # unit test the source code. Nose is configured via the included setup.cfg file
