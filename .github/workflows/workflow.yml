@@ -13,6 +13,8 @@ on:
 # Jobs = defines the tasks that will be executed (runs on the ubuntu-latest runner)
     # 1. update the package manager pip
     # 2. install the dependencies from the requirements.txt file
+    # 3. run flake8 to lint the code
+    # 4. run nosetests to run the unit tests
 
 jobs:
   build:
@@ -29,8 +31,8 @@ jobs:
 
         - name: Lint with flake8 # add quality checks to your CI pipeline
           run: | 
-          flake8 service --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 service --count --max-complexity=10 --max-line-length=127 --statistics
+            flake8 service --count --select=E9,F63,F7,F82 --show-source --statistics
+            flake8 service --count --max-complexity=10 --max-line-length=127 --statistics
 
         - name: Run unit tests with nose
           run: nosetests -v --with-spec --spec-color --with-coverage --cover-package=app # unit test the source code. Nose is configured via the included setup.cfg file
